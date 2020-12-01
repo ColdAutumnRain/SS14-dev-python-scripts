@@ -46,7 +46,7 @@ Now all you need to do is to write a transation of names and description.
 You need a Python interpreter. Script works on bulidiin modules, so you dont have to install anything additional. After you start command prompt you need to write something like this:
 
 ```
-python create_pranslation.py 'path_to_a_project_folder' 'name_of_translation_folder'
+python create_translation.py 'path_to_a_project_folder' 'name_of_translation_folder'
 ```
 
 Where:
@@ -58,7 +58,7 @@ Where:
 Example of command:
 
 ```
-python create_pranslation.py /home/HONK_LORD/Projects/space-station-14 fr-FR
+python create_translation.py /home/HONK_LORD/Projects/space-station-14 fr-FR
 ```
 It should also work on Windows but not for 100% sure.
 
