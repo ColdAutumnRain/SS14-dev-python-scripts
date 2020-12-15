@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import re
 import os
 import ntpath # For Windows users
@@ -19,10 +20,10 @@ def get_file_paths(directory) -> str:
             if file.endswith(".yml"):
                 file_path = os.path.join(path, file)
 
-                yield file_path
+                yield file_path # instead od yeals, return
 
 
-def create_translation_file(file_path):
+def create_translation_file(soure_file_path, dest_file_path):
     """
     :param file_path:
     :return:
@@ -30,15 +31,24 @@ def create_translation_file(file_path):
     This will open yml file, then it will search yml file for all occurences of "name" and "description" lines.
     Next is going to modify this lines and put them to newly created file.
     """
+    new_file_name = ntpath.basename(soure_file_path)
 
-    new_file = open(ntpath.basename(file_path), "w")
+    #New transalation path with file name
+    tmp = os.path.join(dest_file_path, new_file_name)
 
-    with open(file_path, 'r') as fd:
+
+
+    with open(soure_file_path, 'r') as fd:
+
+        new_file = open(tmp, "w")
+
+        # lines = []
 
         lines = fd.readlines()
 
         for line in lines:
-            if re.search(r"name:", line):
+            # New line for "name"
+            if re.search(r" name:", line):
 
                 text = ""
 
@@ -47,11 +57,11 @@ def create_translation_file(file_path):
                 new_string_id = line_id.replace('name:', '- msgid:')
 
                 text = f"{new_string_id} " \
-                       f" msgstr: \n\n"
+                           f" msgstr: \n\n"
 
                 new_file.write(text)
 
-            if re.search(r"description:", line):
+            if re.search(r"description:", line) is not None:
                 text = ""
 
                 line_desc = line.lstrip()
@@ -65,12 +75,12 @@ def create_translation_file(file_path):
                 new_file.write(text)
 
 
-    new_file.close()
+        new_file.close()
 
 
 def main():
 
-    # CHecking number of arguments
+    # Checking number of arguments
     if len(sys.argv) < 3:
         print("Error. Specify project directory and translation")
         sys.exit(1)
@@ -78,28 +88,34 @@ def main():
 
     # Taking project directory
     project_dir = sys.argv[1]
+    
+    files_location = os.path.join(project_dir, "Resources/Prototypes/Entities")
 
     translation_dir = os.path.join(project_dir, "Resources/Locale")
 
     #Get into folder "Locale"
     os.chdir(translation_dir)
 
-    # Nambe of a translation ex. fr-FR
+    # Name of a translation ex. fr-FR
     translation_name = sys.argv[2]
 
     # Create new directory
     os.makedirs(translation_name)
 
     # Move to new directory
-    os.chdir(os.path.join(translation_dir, translation_name))
+    new_tralsation_dir = os.path.join(translation_dir, translation_name)
 
-    computed_dir = os.path.join(project_dir, "Resources/Prototypes")
+
+    os.chdir(new_tralsation_dir)
+
+    # computed_dir = os.path.join(project_dir, "Resources/Prototypes")
 
     # Create translation files
-    for path in get_file_paths(computed_dir):
-        create_translation_file(path)
+    for path in get_file_paths(files_location):
+        create_translation_file(path, new_tralsation_dir)
 
     print("OK")
+    # print(f"There is {counter} file")
 
 
 if __name__ == "__main__":
