@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 import re
 import os
-import ntpath # For Windows users
+import ntpath  # For Windows users
 import sys
-
 
 
 def get_file_paths(directory) -> str:
@@ -20,7 +19,7 @@ def get_file_paths(directory) -> str:
             if file.endswith(".yml"):
                 file_path = os.path.join(path, file)
 
-                yield file_path # instead od yeals, return
+                yield file_path  # instead od yeals, return
 
 
 def create_translation_file(soure_file_path, dest_file_path):
@@ -33,10 +32,8 @@ def create_translation_file(soure_file_path, dest_file_path):
     """
     new_file_name = ntpath.basename(soure_file_path)
 
-    #New transalation path with file name
+    # New transalation path with file name
     tmp = os.path.join(dest_file_path, new_file_name)
-
-
 
     with open(soure_file_path, 'r') as fd:
 
@@ -49,7 +46,6 @@ def create_translation_file(soure_file_path, dest_file_path):
         for line in lines:
             # New line for "name"
             if re.search(r" name:", line):
-
                 text = ""
 
                 line_id = line.lstrip()
@@ -57,7 +53,7 @@ def create_translation_file(soure_file_path, dest_file_path):
                 new_string_id = line_id.replace('name:', '- msgid:')
 
                 text = f"{new_string_id} " \
-                           f" msgstr: \n\n"
+                       f" msgstr: \n\n"
 
                 new_file.write(text)
 
@@ -74,26 +70,23 @@ def create_translation_file(soure_file_path, dest_file_path):
 
                 new_file.write(text)
 
-
         new_file.close()
 
 
 def main():
-
     # Checking number of arguments
     if len(sys.argv) < 3:
         print("Error. Specify project directory and translation")
         sys.exit(1)
 
-
     # Taking project directory
     project_dir = sys.argv[1]
-    
+
     files_location = os.path.join(project_dir, "Resources/Prototypes/Entities")
 
     translation_dir = os.path.join(project_dir, "Resources/Locale")
 
-    #Get into folder "Locale"
+    # Get into folder "Locale"
     os.chdir(translation_dir)
 
     # Name of a translation ex. fr-FR
@@ -104,7 +97,6 @@ def main():
 
     # Move to new directory
     new_tralsation_dir = os.path.join(translation_dir, translation_name)
-
 
     os.chdir(new_tralsation_dir)
 
@@ -120,10 +112,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
